@@ -4,6 +4,9 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
+    pdf_directory: "%kernel.project_dir%/public/uploads/pdf"
+    qrserver: "https://api.qrserver.com/v1/read-qr-code/"
+    separator: "intercalary"
 
 services:
     # default configuration for services in *this* file
@@ -25,3 +28,20 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+    App\Service\PdfHandler:
+        arguments:
+            $targetDirectory: '%pdf_directory%'
+            $qrReader: '@App\Service\QrCodeDecoder'
+            $separator: '%separator%'
+
+    App\Service\PdfUploader:
+        arguments:
+            $pdfHandler: '@App\Service\PdfHandler'
+
+    App\Service\QrCodeDecoder:
+        arguments:
+            $qrserver: '%qrserver%'
+
+    App\Service\PdfRegister:
+        arguments:
+            $targetDirectory: '%pdf_directory%'

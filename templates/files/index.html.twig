@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title "Les fichiers générés" %}
+
+{% block body %}
+    <div class="container">
+        <h1>Liste des fichiers</h1>
+
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Nom du fichier</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            {% for document in pdf_url.pdfDocuments %}
+                <tr>
+                    <td>{{ document.fileName }}</td>
+                    <td>
+                        <a class="btn btn-outline-success btn-sm" href="{{ asset(pdfpath ~ document.fileName) }}"
+                           target="_blank">Télécharger</a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <a class="btn btn-primary" href="{{ path('home') }}">Revenir</a>
+    </div>
+{% endblock %}

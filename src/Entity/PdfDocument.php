@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\PdfDocumentRepository")
@@ -18,6 +19,7 @@ class PdfDocument
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Unique
      */
     private $fileName;
 
@@ -27,7 +29,7 @@ class PdfDocument
     private $createdAt;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\PdfUrl", inversedBy="PdfDocuments")
+     * @ORM\ManyToOne(targetEntity="App\Entity\PdfUrl", inversedBy="PdfDocuments", cascade={"persist"})
      */
     private $pdfUrl;
 

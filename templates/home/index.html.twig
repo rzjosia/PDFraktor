@@ -5,29 +5,38 @@
 {% block body %}
     <div class="jumbotron bg-dark text-light">
         <div class="container text-center">
-            <h1 class="display-4">Séparer votre document en toute tranquilité</h1>
-            <p class="lead">PDFraktor vous permet de séparer un fichier PDF en plusieurs fichier grace à un séparateur QrCode au sein de votre fichier</p>
-            <hr class="my-2">
-            <p><a href="#" class="text-light">Plus d'informations</a></p>
-            <p class="lead">
-                <a class="btn btn-primary btn-lg" href="#" role="button">Selectionner un fichier</a>
-            </p>
-            <p class="lead"><small>ou glisser</small></p>
+            <div class="row justify-content-center">
+                <div class="col-12">
+                    <h1 class="display-5">Séparer votre document en toute tranquilité</h1>
+                    <p class="lead">PDFraktor vous permet de séparer votre fichier avec un QrCode</p>
+                    <hr class="my-2">
+                    <p><a href="#" class="text-light">Plus d'informations</a></p>
+                </div>
+                <div class="col-4">
+                    <div class="lead">
+                        {{ form_start(form) }}
+                        {{ form_rest(form) }}
+                        <button type="submit" class="btn btn-outline-primary">Découper</button>
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
         </div>
+
+
     </div>
 
     <div class="container">
-        <section id="howto" class="text-justify">
-            <h2>Comment ça marche ?</h2>
-            <p>Afin que le fichier puisse se séparer en plusieurs fichiers, quelques conditions doivent etre réunit :</p>
-
-            <ol>
-                <li><strong>Le fichier doit etre en format PDF.</strong> En effet un fichier qui n'est pas de ce format ne sera pas accepté.</li>
-                <li>Un séparateur est une page qui contient un <strong>QrCode</strong>. La valeur par défaut de ce QRCode est <i><strong>"intercalary".</strong></i></li>
-            </ol>
-
-            <p>Et après ? Il suffit d'<i>uploader</i> le fichier PDF en question et on s'en charge du reste ! Vous pouvez telecharger les fichiers séparés une fois terminé!</p>
-        </section>
+        {{ include("home/_howto.html.twig") }}
     </div>
 
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+		$(document).on('change', '.custom-file-input', function () {
+			let fileName = $(this).val().replace(/\\/g, '/').replace(/.*\//, '');
+			$(this).parent('.custom-file').find('.custom-file-label').text(fileName);
+		});
+    </script>
 {% endblock %}
