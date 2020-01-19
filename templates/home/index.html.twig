@@ -1,20 +1,33 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello HomeController!{% endblock %}
+{% block title %}Bienvenue sur PDFraktor{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+    <div class="jumbotron bg-dark text-light">
+        <div class="container text-center">
+            <h1 class="display-4">Séparer votre document en toute tranquilité</h1>
+            <p class="lead">PDFraktor vous permet de séparer un fichier PDF en plusieurs fichier grace à un séparateur QrCode au sein de votre fichier</p>
+            <hr class="my-2">
+            <p><a href="#" class="text-light">Plus d'informations</a></p>
+            <p class="lead">
+                <a class="btn btn-primary btn-lg" href="#" role="button">Selectionner un fichier</a>
+            </p>
+            <p class="lead"><small>ou glisser</small></p>
+        </div>
+    </div>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+    <div class="container">
+        <section id="howto" class="text-justify">
+            <h2>Comment ça marche ?</h2>
+            <p>Afin que le fichier puisse se séparer en plusieurs fichiers, quelques conditions doivent etre réunit :</p>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ '/home/josia/Projects/PDFraktor/src/Controller/HomeController.php'|file_link(0) }}">src/Controller/HomeController.php</a></code></li>
-        <li>Your template at <code><a href="{{ '/home/josia/Projects/PDFraktor/templates/home/index.html.twig'|file_link(0) }}">templates/home/index.html.twig</a></code></li>
-    </ul>
-</div>
+            <ol>
+                <li><strong>Le fichier doit etre en format PDF.</strong> En effet un fichier qui n'est pas de ce format ne sera pas accepté.</li>
+                <li>Un séparateur est une page qui contient un <strong>QrCode</strong>. La valeur par défaut de ce QRCode est <i><strong>"intercalary".</strong></i></li>
+            </ol>
+
+            <p>Et après ? Il suffit d'<i>uploader</i> le fichier PDF en question et on s'en charge du reste ! Vous pouvez telecharger les fichiers séparés une fois terminé!</p>
+        </section>
+    </div>
+
 {% endblock %}
