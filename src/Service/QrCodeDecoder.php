@@ -77,10 +77,10 @@ class QrCodeDecoder
                 return null;
             });
             
-            $this->logger->info("xml content filter end");
-            
             return array_merge(array_filter($res))[0] ?? null;
         });
+    
+        $this->logger->info("xml content filter end");
         
         return array_filter($output);
     }

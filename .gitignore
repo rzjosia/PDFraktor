@@ -15,4 +15,4 @@
 /phpunit.xml
 ###< symfony/phpunit-bridge ###
 
-/public/uploads/pdf/*
+/public/uploads/pdf/*.pdf
