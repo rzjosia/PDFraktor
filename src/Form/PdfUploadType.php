@@ -16,6 +16,10 @@ class PdfUploadType extends AbstractType
             ->add('document', FileType::class, [
                 'label' => "Selectionner votre PDF",
                 
+                'attr' => [
+                  'placeholder' => "cliquer ou glisser ici"
+                ],
+                
                 // unmapped means that this field is not associated to any entity property
                 'mapped' => false,
                 

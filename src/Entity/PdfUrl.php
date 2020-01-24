@@ -18,50 +18,50 @@ class PdfUrl
      * @ORM\Column(type="integer")
      */
     private $id;
-
+    
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\Unique
      */
     private $path;
-
+    
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\PdfDocument", mappedBy="pdfUrl")
+     * @ORM\OneToMany(targetEntity="App\Entity\PdfDocument", mappedBy="pdfUrl", cascade={"persist"})
      */
     private $PdfDocuments;
-
+    
     /**
      * @ORM\Column(type="datetime")
      */
     private $createdAt;
-
+    
     /**
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $expireAt;
-
+    
     public function __construct()
     {
         $this->PdfDocuments = new ArrayCollection();
     }
-
+    
     public function getId(): ?int
     {
         return $this->id;
     }
-
+    
     public function getPath(): ?string
     {
         return $this->path;
     }
-
+    
     public function setPath(string $path): self
     {
         $this->path = $path;
-
+        
         return $this;
     }
-
+    
     /**
      * @return Collection|PdfDocument[]
      */
@@ -69,17 +69,17 @@ class PdfUrl
     {
         return $this->PdfDocuments;
     }
-
+    
     public function addPdfDocument(PdfDocument $pdfDocument): self
     {
         if (!$this->PdfDocuments->contains($pdfDocument)) {
             $this->PdfDocuments[] = $pdfDocument;
             $pdfDocument->setPdfUrl($this);
         }
-
+        
         return $this;
     }
-
+    
     public function removePdfDocument(PdfDocument $pdfDocument): self
     {
         if ($this->PdfDocuments->contains($pdfDocument)) {
@@ -89,31 +89,31 @@ class PdfUrl
                 $pdfDocument->setPdfUrl(null);
             }
         }
-
+        
         return $this;
     }
-
+    
     public function getCreatedAt(): ?\DateTimeInterface
     {
         return $this->createdAt;
     }
-
+    
     public function setCreatedAt(\DateTimeInterface $createdAt): self
     {
         $this->createdAt = $createdAt;
-
+        
         return $this;
     }
-
+    
     public function getExpireAt(): ?\DateTimeInterface
     {
         return $this->expireAt;
     }
-
+    
     public function setExpireAt(?\DateTimeInterface $expireAt): self
     {
         $this->expireAt = $expireAt;
-
+        
         return $this;
     }
 }

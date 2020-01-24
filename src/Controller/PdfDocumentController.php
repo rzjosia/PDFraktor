@@ -36,14 +36,16 @@ class PdfDocumentController extends AbstractController
      */
     public function index(Request $request): Response
     {
-        
-        $pdfUrl = $this->repository->findByPath($request->query->get('url'));
-        if (!$pdfUrl) {
-            throw $this->createNotFoundException("Cette page n'existe pas");
+        if ($request->query->get('url')) {
+            $pdfUrl = $this->repository->findByPath($request->query->get('url'));
+            if (!$pdfUrl) {
+                throw $this->createNotFoundException("Cette page n'existe pas");
+            }
+    
+            return $this->render("files/index.html.twig", [
+                "pdf_url" => $pdfUrl
+            ]);
         }
-        
-        return $this->render("files/index.html.twig", [
-            "pdf_url" => $pdfUrl
-        ]);
+        return $this->render("files/index.html.twig");
     }
 }

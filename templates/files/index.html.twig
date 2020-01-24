@@ -3,30 +3,43 @@
 {% block title "Les fichiers générés" %}
 
 {% block body %}
-    <div class="container">
-        <h1>Liste des fichiers</h1>
+    <div class="container mt-4">
+        {% if pdf_url is not defined or pdf_url.pdfDocuments | length <= 0 %}
+            <div class="alert alert-danger" role="alert">
+                <strong>Aucun fichier généré :</strong>l
+                <ul>
+                    <li>Le fichier doit etre uniquement au format PDF</li>
+                    <li>Vérifier si votre document contient des QrCodes avec la valeur <i>"intercalary"</i></li>
+                </ul>
+            </div>
+        {% else %}
 
-        <table class="table table-striped">
-            <thead>
-            <tr>
-                <th>Nom du fichier</th>
-                <th>Action</th>
-            </tr>
-            </thead>
+            <div>
+                <h1 class="text-primary float-left">Liste des fichiers</h1>
+                <a class="btn btn-danger float-right" href="{{ path('home') }}">Revenir</a>
+            </div>
 
-            <tbody>
-            {% for document in pdf_url.pdfDocuments %}
+            <table class="table table-striped table-hover">
+                <thead>
                 <tr>
-                    <td>{{ document.fileName }}</td>
-                    <td>
-                        <a class="btn btn-outline-success btn-sm" href="{{ asset(pdfpath ~ document.fileName) }}"
-                           target="_blank">Télécharger</a>
-                    </td>
+                    <th>Nom du fichier</th>
+                    <th>Action</th>
                 </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+                </thead>
 
-        <a class="btn btn-primary" href="{{ path('home') }}">Revenir</a>
+                <tbody>
+                {% for document in pdf_url.pdfDocuments %}
+                    <tr>
+                        <td>{{ document.fileName }}</td>
+                        <td>
+                            <a class="btn btn-success btn-sm" href="{{ asset(pdfpath ~ document.fileName) }}"
+                               target="_blank">Télécharger</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+        <a class="btn btn-danger float-right" href="{{ path('home') }}">Revenir</a>
     </div>
 {% endblock %}

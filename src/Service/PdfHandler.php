@@ -5,7 +5,7 @@ namespace App\Service;
 
 
 use mikehaertl\pdftk\Pdf;
-use Spatie\PdfToImage\Exceptions\PdfDoesNotExist;
+use Smalot\PdfParser\Parser;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class PdfHandler
@@ -45,32 +45,34 @@ class PdfHandler
     public function parse(UploadedFile $file): array
     {
         $generatedFiles = [];
-        
         try {
-            $pdf = new \Spatie\PdfToImage\Pdf($file->getRealPath());
-            $numberOfPages = $pdf->getNumberOfPages();
-            $beginIntercalary = 1;
+            $numberOfPages = $this->getNumberOfPages($file->getRealPath());
             
             $intercalaries = $this->qrReader
                 ->decode($file->getRealPath())
                 ->getIntercalaries($this->separator);
             
+            $sectionBegin = 1;
+            
             foreach ($intercalaries as $intercalary) {
-                $i = $intercalary["index"] + 1;
-                if ($i - $beginIntercalary > 0) {
-                    $generatedFiles[] = $this->create($file->getRealPath(), $beginIntercalary, $i - 1);
-                    $beginIntercalary = $i + 1;
+                if ($intercalary["page"] - $sectionBegin > 0) {
+                    $generatedFiles[] = $this->create(
+                        $file->getRealPath(),
+                        $sectionBegin,
+                        $intercalary['index']);
                 }
+                $sectionBegin = $intercalary["page"] + 1;
             }
             
-            if ($beginIntercalary <= $numberOfPages) {
-                $generatedFiles[] = $this->create($file->getRealPath(), $beginIntercalary, $numberOfPages);
+            if ($sectionBegin > 1 && $sectionBegin <= $numberOfPages) {
+                $generatedFiles[] = $this->create($file->getRealPath(), $sectionBegin, $numberOfPages);
             }
             
-        } catch (PdfDoesNotExist $e) {
-        } finally {
-            return $generatedFiles;
+        } catch (\Exception $ignore) {
+        
         }
+        
+        return $generatedFiles;
         
     }
     
@@ -80,8 +82,7 @@ class PdfHandler
      * @param $pageEnd
      * @return string
      */
-    private
-    function create($filePath, $pageBegin, $pageEnd = null): string
+    private function create($filePath, $pageBegin, $pageEnd = null): string
     {
         $pdf = new Pdf($filePath);
         $newFileName = $this->generateFileNameWithoutExtension($filePath);
@@ -101,15 +102,29 @@ class PdfHandler
         return $newFileName . '.pdf';
     }
     
+    private function getNumberOfPages($filePath): int
+    {
+        $parser = new Parser();
+        try {
+            $pdf = $parser->parseFile($filePath);
+            return $pdf->getDetails()["Pages"];
+        } catch (\Exception $e) {
+            return 0;
+        }
+    }
+    
     /**
      * @param $fileName
      * @return string
      */
-    private
-    function generateFileNameWithoutExtension($fileName)
+    private function generateFileNameWithoutExtension($fileName)
     {
         $originalFilename = pathinfo($fileName, PATHINFO_FILENAME);
-        $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()', $originalFilename);
+        
+        $safeFilename = transliterator_transliterate(
+            'Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()',
+            $originalFilename);
+        
         return $safeFilename . '-' . uniqid();
     }
 }
