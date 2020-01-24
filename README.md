@@ -12,6 +12,7 @@ Pour cela il faut un motif pour séparer les pages. On utilise ici un QRcode ave
 
 Modifiez dans le fichier **_.env_** la partie :
 
+## Configurations:
 ```dotenv
 DATABASE_URL=mysql://user:password@127.0.0.1:3306/dbanme
 ```
@@ -31,7 +32,7 @@ symfony console migrations:migrate
 symfony console doctrine:migrations:migrate
 ```
 
-Lancer le serveur: 
+## Lancer le serveur: 
 ```shell script
 symfony serve
 ```
