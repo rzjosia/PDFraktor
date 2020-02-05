@@ -12,11 +12,40 @@
                     <hr class="my-2">
                     {#                    <p><a href="#" class="text-light">Plus d'informations</a></p>#}
                 </div>
-                <div class="col-md-6 col-lg-4">
-                    <div class="lead">
-                        {{ form_start(form) }}
-                        {{ form_rest(form) }}
-                        {{ form_end(form) }}
+                <div class="row col-12 justify-content-between">
+                    <div class="col-lg-4 col-md-6 col-xs-12" id="upload">
+                        <div class="card">
+                            <div class="card-body align-content-around">
+                                {{ form_start(form, {
+                                    "action": path("files.create"),
+                                    "attr": {"id": "uploadForm"}}) }}
+                                {{ form_row(form.document, {"attr": {"multiple": true}}) }}
+                                {{ form_rest(form) }}
+
+                                <div>
+                                    <p id="filesNumber">0</p>
+                                    <p>fichiers selectionnés</p>
+                                </div>
+
+                                <button type="submit" class="btn btn-primary btn-block" id="splitButton">Découper
+                                </button>
+
+                                {{ form_end(form) }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6 col-md-6 col-xs-12">
+                        <div class="card border-info">
+                            <div class="card-header">
+                                <h4>Mes fichiers</h4>
+                            </div>
+                            <div class="card-body">
+                                <ul id="pdfList" class="list-group">
+                                </ul>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -30,14 +59,5 @@
 {% endblock %}
 
 {% block javascripts %}
-    <script>
-		$(document).ready(function () {
-			$(document).on('change', '.custom-file-input', function () {
-				let fileName = $(this).val().replace(/\\/g, '/').replace(/.*\//, '');
-				$(this).parent('.custom-file').find('.custom-file-label').text(fileName);
-				$(this).parent().append("<p>Téléchargement en cours, veuillez patienter...</p>");
-				$(this).closest("form").trigger("submit");
-			});
-		});
-    </script>
+    {{ encore_entry_script_tags('split') }}
 {% endblock %}

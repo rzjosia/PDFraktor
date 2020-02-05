@@ -5,8 +5,7 @@ namespace App\Repository;
 use App\Entity\PdfUrl;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
-use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\NoResultException;
+use Doctrine\ORM\Query;
 
 /**
  * @method PdfUrl|null find($id, $lockMode = null, $lockVersion = null)
@@ -23,16 +22,17 @@ class PdfUrlRepository extends ServiceEntityRepository
     
     /**
      * @param $name
-     * @return mixed
+     * @return Query
      */
-    public function findByPath($name)
+    public function findByPathQuery($name) : Query
     {
         return $this->createQueryBuilder("u")
             ->where("u.path = :name")
             ->setParameter('name', $name)
-            ->getQuery()
-            ->getResult()[0] ?? new PdfUrl();
+            ->getQuery();
     }
+    
+    
     
     // /**
     //  * @return PdfUrl[] Returns an array of PdfUrl objects
