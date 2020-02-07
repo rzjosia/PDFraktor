@@ -1,5 +1,6 @@
 import $ from "jquery";
 import axios from "axios";
+import Swal from "sweetalert2";
 
 const $uploadForm = $('#uploadForm');
 const formName = $uploadForm.attr('name');
@@ -25,8 +26,7 @@ const uploadFile = (fData) => {
 
 	axios.post($uploadForm.attr("action"), formData, {
 		headers: {
-			'Content-Type': 'multipart/form-data',
-			'X-CSRF-TOKEN': token
+			'Content-Type': 'multipart/form-data'
 		},
 		onUploadProgress: progressEvent => {
 			let percent = Math.round((progressEvent.loaded * 100) / progressEvent.total);
@@ -40,24 +40,40 @@ const uploadFile = (fData) => {
 		},
 	})
 		.then(res => {
-			console.log(res.data);
-			if (res.data.error) {
-				setStatusMessage("danger", res.data.error.message);
+			//console.log(res.data);
+			const data = res.data;
+
+			if (data.error) {
+				setStatusMessage("danger", data.error.message);
 			} else {
-				if (res.data.url) {
+				if (data.url) {
 					setStatusMessage("success", "terminé");
 					$progressId.parent().after(`<a type="button" target="_blank" class="btn btn-success" href="${res.data.url}">télécharger</a>`);
+					fData.url = data.url;
+					fData.token = data.token;
 				} else {
 					setStatusMessage("warning", "terminé (aucun fichier généré)")
 				}
 
 			}
 		})
-		.catch(err => {
+		.catch(error => {
 			setStatusMessage("danger", "Une erreur s'est produite");
-			if (confirm("Une erreur s'est produite sur le fichier " + fData.file.name + ". Voulez-vous recommencer ?")) {
-				uploadFile(fData);
-			}
+
+			Swal.fire({
+				title: 'Oops !',
+				html: `"Une erreur s'est produite sur le fichier <span class="font-weight-bold font-italic">${fData.file.name}</span> Voulez-vous recommence`,
+				icon: 'error',
+				showCancelButton: true,
+				confirmButtonColor: '#3085d6',
+				cancelButtonColor: '#d33',
+				confirmButtonText: 'Oui',
+				cancelButtonText: "Non"
+			}).then((result) => {
+				if (result.value) {
+					uploadFile(fData);
+				}
+			});
 		})
 		.then(() => {
 			fData.complete = true;

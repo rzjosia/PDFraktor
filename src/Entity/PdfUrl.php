@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -26,7 +27,7 @@ class PdfUrl
     private $path;
     
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\PdfDocument", mappedBy="pdfUrl", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="App\Entity\PdfDocument", mappedBy="pdfUrl", cascade={"persist", "remove"})
      */
     private $PdfDocuments;
     
@@ -93,24 +94,24 @@ class PdfUrl
         return $this;
     }
     
-    public function getCreatedAt(): ?\DateTimeInterface
+    public function getCreatedAt(): ?DateTimeInterface
     {
         return $this->createdAt;
     }
     
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    public function setCreatedAt(DateTimeInterface $createdAt): self
     {
         $this->createdAt = $createdAt;
         
         return $this;
     }
     
-    public function getExpireAt(): ?\DateTimeInterface
+    public function getExpireAt(): ?DateTimeInterface
     {
         return $this->expireAt;
     }
     
-    public function setExpireAt(?\DateTimeInterface $expireAt): self
+    public function setExpireAt(?DateTimeInterface $expireAt): self
     {
         $this->expireAt = $expireAt;
         

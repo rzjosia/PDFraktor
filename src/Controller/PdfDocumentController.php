@@ -2,11 +2,12 @@
 
 namespace App\Controller;
 
-use App\Entity\PdfUpload;
 use App\Form\PdfUploadType;
 use App\Repository\PdfUrlRepository;
 use App\Service\PdfRegister;
 use App\Service\PdfUploader;
+use App\Service\PdfUrlHasher;
+use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -39,16 +40,26 @@ class PdfDocumentController extends AbstractController
     private $logger;
     
     /**
+     * @var PdfUrlHasher
+     */
+    private $pdfUrlHasher;
+    
+    /**
      * PdfDocumentController constructor.
      * @param PdfUrlRepository $repository
      * @param UrlGeneratorInterface $router
      * @param LoggerInterface $logger
+     * @param PdfUrlHasher $pdfUrlHasher
      */
-    public function __construct(PdfUrlRepository $repository, UrlGeneratorInterface $router, LoggerInterface $logger)
+    public function __construct(PdfUrlRepository $repository,
+                                UrlGeneratorInterface $router,
+                                LoggerInterface $logger,
+                                PdfUrlHasher $pdfUrlHasher)
     {
         $this->repository = $repository;
         $this->router = $router;
         $this->logger = $logger;
+        $this->pdfUrlHasher = $pdfUrlHasher;
     }
     
     /**
@@ -68,9 +79,12 @@ class PdfDocumentController extends AbstractController
     public function show($slug): Response
     {
         $pdfUrl = $this->repository->findOneBy(["path" => $slug]);
-        return $this->render("files/index.html.twig", [
-            "pdf_url" => $pdfUrl
-        ]);
+        if ($pdfUrl) {
+            return $this->render("files/index.html.twig", [
+                "pdf_url" => $pdfUrl
+            ]);
+        }
+        return $this->redirectToRoute('files.none');
     }
     
     /**
@@ -81,7 +95,9 @@ class PdfDocumentController extends AbstractController
      * @return Response
      * @throws Exception
      */
-    public function create(PdfUploader $pdfUploader, PdfRegister $pdfRegister, Request $request): Response
+    public function create(PdfUploader $pdfUploader,
+                           PdfRegister $pdfRegister,
+                           Request $request): Response
     {
         $form = $this->createForm(PdfUploadType::class);
         $form->handleRequest($request);
@@ -98,6 +114,7 @@ class PdfDocumentController extends AbstractController
                 
                 $data["url"] = $this->router->generate('files.show', ["slug" => $pdfUrl->getPath()]);
                 $data["count_files"] = $pdfUrl->getPdfDocuments()->count();
+                $data["token"] = $this->pdfUrlHasher->hashUrl($pdfUrl->getPath());
                 return $this->json($data);
             }
         }
@@ -109,5 +126,46 @@ class PdfDocumentController extends AbstractController
         
         
         return $this->json($data);
+    }
+    
+    /**
+     * @Route("/{slug}", name="files.delete", methods={"DELETE"})
+     * @param $slug
+     * @param EntityManagerInterface $entityManager
+     * @param Request $request
+     * @return Response
+     */
+    public function delete($slug, EntityManagerInterface $entityManager, Request $request): Response
+    {
+        $pdfUrl = $this->repository->findOneBy(["path" => $slug]);
+        
+        $res = [
+            "file" => [
+                "name" => $slug
+            ]
+        ];
+        
+        $token = json_decode($request->getContent())->token ?? null;
+        
+        try {
+            if ($this->pdfUrlHasher->urlHashEquals($slug, $token) && $pdfUrl) {
+                
+                $entityManager->remove($pdfUrl);
+                $entityManager->flush();
+                $res["file"]["token_valid"] = "valid token";
+                $res["file"]["deleted"] = true;
+            } else {
+                $res["file"]["deleted"] = false;
+                $res["file"]["message"] = 'Invalid token : ' . $token;
+            }
+        } catch (Exception $ignored) {
+            $res["file"]["deleted"] = false;
+            $res["file"]["url"] = $pdfUrl->getPath();
+            $res["file"]["token"] = $token;
+            $res["file"]["slug"] = $this->pdfUrlHasher->hashUrl($slug);
+            $res["file"]["message"] = $ignored->getMessage();
+        } finally {
+            return $this->json($res);
+        }
     }
 }

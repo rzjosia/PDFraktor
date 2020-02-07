@@ -1,7 +1,9 @@
 import 'dm-file-uploader';
 import $ from "jquery";
+import Swal from "sweetalert2";
 import model from './split/fileModel';
 import uploadFile from './split/uploadFile';
+import deleteFile from "./split/deleteFile";
 
 $(document).ready(function () {
 	let counter = 0;
@@ -22,13 +24,32 @@ $(document).ready(function () {
 			return val.id === id;
 		});
 
-		fileList.splice(index, 1);
+		Swal.fire({
+			title: 'Vous-êtes sûr ?',
+			html: `<span>le fichier <em class="font-weight-bold">${fileList[index].file.name}</em> sera supprimé de la liste</span>`,
+			icon: 'warning',
+			showCancelButton: true,
+			confirmButtonColor: '#3085d6',
+			cancelButtonColor: '#d33',
+			confirmButtonText: 'Supprimer',
+			cancelButtonText: "Annuler"
+		}).then((result) => {
+			if (result.value) {
+				if (fileList[index].url) {
+					deleteFile(fileList[index].url, fileList[index].token);
+				}
 
-		$("#file_" + id).fadeOut(300, () => {
-			$(this).remove();
+				fileList.splice(index, 1);
+
+				$("#file_" + id).fadeOut(300, () => {
+					$(this).remove();
+				});
+				refreshFileList();
+
+				$('#pdf_upload_document').val("")
+			}
 		});
-
-		refreshFileList();
+		console.log();
 	});
 
 	$(document).on('change', '.custom-file-input', e => {

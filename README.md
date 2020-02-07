@@ -9,27 +9,29 @@ Pour cela il faut un motif pour séparer les pages. On utilise ici un QRcode ave
 - composer
 - php 7.2 >
 - zbar (apt install zbar-tools)
+- node
+
+## Configurations:
 
 Modifiez dans le fichier **_.env_** la partie :
 
-## Configurations:
 ```dotenv
 DATABASE_URL=mysql://user:password@127.0.0.1:3306/dbanme
 ```
 
-Une fois tous les composants installé, vous pourvez lancer la commande suivante:
+Installation:
 
-Migration de la base de données:
 ```shell script
+composer install
+yarn
 symfony console make:migrations
-```
-
-```shell script
-symfony console migrations:migrate
-```
-
-```shell script
 symfony console doctrine:migrations:migrate
+```
+
+ou lancer tout avec
+
+```shell script
+make
 ```
 
 ## Lancer le serveur: 

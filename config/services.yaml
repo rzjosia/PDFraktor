@@ -7,6 +7,8 @@ parameters:
     pdf_directory: "%kernel.project_dir%/public/uploads/pdf"
     qrserver: "https://api.qrserver.com/v1/read-qr-code/"
     separator: "intercalary"
+    hash_prefix: "pdfraktoruploadintercalary"
+    hash_algo: "sha256"
 
 services:
     # default configuration for services in *this* file
@@ -45,3 +47,8 @@ services:
     App\Service\PdfRegister:
         arguments:
             $targetDirectory: '%pdf_directory%'
+
+    App\Service\PdfUrlHasher:
+        arguments:
+            $hashPrefix: '%hash_prefix%'
+            $hashAlgo: '%hash_algo%'
