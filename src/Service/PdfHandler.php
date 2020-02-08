@@ -4,6 +4,7 @@
 namespace App\Service;
 
 
+use Exception;
 use mikehaertl\pdftk\Pdf;
 use Smalot\PdfParser\Parser;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -68,7 +69,7 @@ class PdfHandler
                 $generatedFiles[] = $this->create($file->getRealPath(), $sectionBegin, $numberOfPages);
             }
             
-        } catch (\Exception $ignore) {
+        } catch (Exception $ignore) {
         
         }
         
@@ -108,7 +109,7 @@ class PdfHandler
         try {
             $pdf = $parser->parseFile($filePath);
             return $pdf->getDetails()["Pages"];
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return 0;
         }
     }
@@ -126,5 +127,13 @@ class PdfHandler
             $originalFilename);
         
         return $safeFilename . '-' . uniqid();
+    }
+    
+    /**
+     * @return string
+     */
+    public function getSeparator(): string
+    {
+        return $this->separator;
     }
 }

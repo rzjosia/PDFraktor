@@ -28,7 +28,7 @@ symfony console make:migrations
 symfony console doctrine:migrations:migrate
 ```
 
-ou lancer tout avec
+ou installer tout avec
 
 ```shell script
 make
