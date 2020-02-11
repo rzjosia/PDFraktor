@@ -6,6 +6,7 @@ namespace App\Service;
 
 use Exception;
 use mikehaertl\pdftk\Pdf;
+use Psr\Log\LoggerInterface;
 use Smalot\PdfParser\Parser;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
@@ -27,16 +28,23 @@ class PdfHandler
     private $qrReader;
     
     /**
+     * @var LoggerInterface
+     */
+    private $logger;
+    
+    /**
      * PdfUploader constructor.
      * @param $targetDirectory
      * @param $separator
      * @param $qrReader
+     * @param LoggerInterface $logger
      */
-    public function __construct($targetDirectory, $separator, $qrReader)
+    public function __construct($targetDirectory, $separator, $qrReader, LoggerInterface $logger)
     {
         $this->targetDirectory = $targetDirectory;
         $this->separator = $separator;
         $this->qrReader = $qrReader;
+        $this->logger = $logger;
     }
     
     /**
@@ -52,6 +60,8 @@ class PdfHandler
             $intercalaries = $this->qrReader
                 ->decode($file->getRealPath())
                 ->getIntercalaries($this->separator);
+            
+            $this->logger->info("intercalaries : " . $intercalaries);
             
             $sectionBegin = 1;
             

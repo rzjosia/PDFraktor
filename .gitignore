@@ -14,7 +14,7 @@
 .phpunit.result.cache
 /phpunit.xml
 ###< symfony/phpunit-bridge ###
-public/uploads/pdf/*
+
 ###> symfony/webpack-encore-bundle ###
 /node_modules/
 /public/build/

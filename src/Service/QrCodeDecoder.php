@@ -39,20 +39,29 @@ class QrCodeDecoder
      * @param string $path
      * @return $this
      */
-    public function decode(string $path): self
+    public function decode(string $path)
     {
+        // FIXME: erreur appel système
+        
         $process = new Process(['/usr/bin/zbarimg', '-q', '--xml', $path]);
+        
         $process->start();
         $process->wait();
+        
         $this->xmlContent = $process->getOutput();
+        
+        $this->logger->info("output content : " . $process->getErrorOutput());
+        
         return $this;
+        
     }
     
     /**
      * @param string $separator
      * @return array
      */
-    public function getIntercalaries(string $separator): array
+    public
+    function getIntercalaries(string $separator): array
     {
         if ($this->xmlContent == null) {
             $this->logger->info("no xml content");
@@ -79,7 +88,7 @@ class QrCodeDecoder
             
             return array_merge(array_filter($res))[0] ?? null;
         });
-    
+        
         $this->logger->info("xml content filter end");
         
         return array_filter($output);

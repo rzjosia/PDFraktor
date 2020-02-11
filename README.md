@@ -5,37 +5,51 @@ PDFraktor est une application web en symfony 4 qui permet de découper un fichie
 Pour cela il faut un motif pour séparer les pages. On utilise ici un QRcode avec les mot clé **_"intercalary"_**
 
 ## Prérequis :
-- symfony
-- composer
-- php 7.2 >
-- zbar (apt install zbar-tools)
-- node
-
-## Configurations:
-
-Modifiez dans le fichier **_.env_** la partie :
-
-```dotenv
-DATABASE_URL=mysql://user:password@127.0.0.1:3306/dbanme
-```
+- docker
+- docker-compose
 
 Installation:
 
 ```shell script
-composer install
-yarn
-symfony console make:migrations
-symfony console doctrine:migrations:migrate
+make build
 ```
-
-ou installer tout avec
-
+ou
 ```shell script
-make
+sudo make build
 ```
+Par défaut le site est accessible sur le port **7777** de la machine hôte.
 
-## Lancer le serveur: 
+## Quelques commandes:
+Lancer le conteneur sans build :
 ```shell script
-symfony serve
+make start
 ```
 
+Arrêter le conteneur :
+```shell script
+make stop
+```
+
+installer les paquets composer et yarn
+```shell script
+make install
+```
+
+Migration de la base de données
+```shell script
+make sf-migration
+```
+
+Lancer symfony server cli (accessible sur le port **8888** de la machine hôte) :
+```shell script
+make sf-serve
+```
+Lancer wepback watch :
+```shell script
+make yarn-watch
+```
+
+Lancer d'autres commandes :
+```shell script
+docker-compose exec web <command>
+```
