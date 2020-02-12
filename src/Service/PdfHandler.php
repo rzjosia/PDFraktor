@@ -61,8 +61,6 @@ class PdfHandler
                 ->decode($file->getRealPath())
                 ->getIntercalaries($this->separator);
             
-            $this->logger->info("intercalaries : " . $intercalaries);
-            
             $sectionBegin = 1;
             
             foreach ($intercalaries as $intercalary) {
@@ -91,29 +89,45 @@ class PdfHandler
      * @param String $filePath
      * @param $pageBegin
      * @param $pageEnd
-     * @return string
+     * @return string|null
      */
-    private function create($filePath, $pageBegin, $pageEnd = null): string
+    private function create($filePath, $pageBegin, $pageEnd = null): ?string
     {
-        $pdf = new Pdf($filePath);
-        $newFileName = $this->generateFileNameWithoutExtension($filePath);
-        $filePathName = $this->targetDirectory . '/' . $newFileName . '.pdf';
-        $pdf->tempDir = $this->targetDirectory . '/';
+        $this->logger->info("create file begin");
         
-        if ($pageEnd && $pageEnd > $pageBegin) {
-            $pdf
-                ->cat($pageBegin, $pageEnd)
-                ->saveAs($filePathName);
-        } else {
-            $pdf
-                ->cat($pageBegin)
-                ->saveAs($filePathName);
+        try {
+            $pdf = new Pdf($filePath);
+            $newFileName = $this->generateFileNameWithoutExtension($filePath);
+            $filePathName = $this->targetDirectory . '/' . $newFileName . '.pdf';
+            //$pdf->tempDir = $this->targetDirectory . '/';
+    
+            if ($pageEnd && $pageEnd > $pageBegin) {
+                $res = $pdf
+                    ->cat($pageBegin, $pageEnd)
+                    ->saveAs($filePathName);
+            } else {
+                $res = $pdf
+                    ->cat($pageBegin)
+                    ->saveAs($filePathName);
+            }
+    
+            if (!$res) {
+                $this->logger->error("no file created : " . $pdf->getError());
+                return null;
+            }
+    
+            $this->logger->info("create file end" . $newFileName . '.pdf');
+    
+            return $newFileName . '.pdf';
+        } catch (Exception $e) {
+            $this->logger->error("no file created in " . sys_get_temp_dir() . " => " . $e->getMessage());
         }
         
-        return $newFileName . '.pdf';
+        return null;
     }
     
-    private function getNumberOfPages($filePath): int
+    private
+    function getNumberOfPages($filePath): int
     {
         $parser = new Parser();
         try {
@@ -128,7 +142,8 @@ class PdfHandler
      * @param $fileName
      * @return string
      */
-    private function generateFileNameWithoutExtension($fileName)
+    private
+    function generateFileNameWithoutExtension($fileName)
     {
         $originalFilename = pathinfo($fileName, PATHINFO_FILENAME);
         
@@ -142,7 +157,8 @@ class PdfHandler
     /**
      * @return string
      */
-    public function getSeparator(): string
+    public
+    function getSeparator(): string
     {
         return $this->separator;
     }

@@ -7,13 +7,18 @@ build :
 
 rebuild: clean build
 
-rerun: stop rebuild start
+rerun: stop rebuild start install
 
 start:
 	@docker-compose -p ${project} up -d
+	make install
+	make sf-migrate || true
+	make sf-serve
 
 stop:
 	@docker-compose -p ${project} stop || true
+
+restart: stop start
 
 clean:
 	@docker container prune -f
@@ -32,4 +37,7 @@ yarn-watch:
 install:
 	@docker-compose exec web composer install || true
 	@docker-compose exec web yarn
+
+exec:
+	@docker-compose exec web bash
 

@@ -41,16 +41,12 @@ class QrCodeDecoder
      */
     public function decode(string $path)
     {
-        // FIXME: erreur appel système
-        
         $process = new Process(['/usr/bin/zbarimg', '-q', '--xml', $path]);
         
         $process->start();
         $process->wait();
         
         $this->xmlContent = $process->getOutput();
-        
-        $this->logger->info("output content : " . $process->getErrorOutput());
         
         return $this;
         
@@ -60,8 +56,7 @@ class QrCodeDecoder
      * @param string $separator
      * @return array
      */
-    public
-    function getIntercalaries(string $separator): array
+    public function getIntercalaries(string $separator): array
     {
         if ($this->xmlContent == null) {
             $this->logger->info("no xml content");
@@ -72,6 +67,7 @@ class QrCodeDecoder
         $crawler->addXmlContent($this->xmlContent);
         
         $this->logger->info("xml content filter begin");
+        
         
         $output = $crawler->filterXPath('//source/index')->each(function (Crawler $indexCrawler, $i) use ($separator) {
             $res = $indexCrawler->filterXPath('node()//symbol')->each(function (Crawler $symbolCrawler, $i) use ($separator, $indexCrawler) {
@@ -97,8 +93,7 @@ class QrCodeDecoder
     /**
      * @return string
      */
-    public
-    function getXmlContent(): string
+    public function getXmlContent(): string
     {
         return $this->xmlContent;
     }
