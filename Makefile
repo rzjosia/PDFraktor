@@ -26,6 +26,7 @@ clean:
 	@docker image rm -f ${project} || true
 
 sf-migrate:
+	@docker-compose exec web symfony console doctrine:database:create --if-not-exists
 	@docker-compose exec web symfony console doctrine:migrations:migrate -n --allow-no-migration
 
 sf-serve:
@@ -48,3 +49,5 @@ install: composer-install yarn-install yarn-dev
 exec:
 	@docker-compose exec web bash
 
+exec-db:
+	@docker-compose exec database bash
