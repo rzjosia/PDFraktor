@@ -7,13 +7,14 @@ build :
 
 rebuild: clean build
 
-rerun: stop rebuild start install
+rerun: stop rebuild start
 
-start:
+start-container:
 	@docker-compose -p ${project} up -d
-	make install
-	make sf-migrate || true
-	make sf-serve
+
+start-no-migrate: start-container install
+
+start: start-container install sf-migrate
 
 stop:
 	@docker-compose -p ${project} stop || true
@@ -25,8 +26,7 @@ clean:
 	@docker image rm -f ${project} || true
 
 sf-migrate:
-	@docker-compose exec web symfony console make:migration
-	@docker-compose exec web symfony console doctrine:migrations:migrate
+	@docker-compose exec web symfony console doctrine:migrations:migrate -n --allow-no-migration
 
 sf-serve:
 	@docker-compose exec web symfony serve
@@ -34,9 +34,16 @@ sf-serve:
 yarn-watch:
 	@docker-compose exec web yarn encore dev --watch
 
-install:
-	@docker-compose exec web composer install || true
+yarn-install:
 	@docker-compose exec web yarn
+
+yarn-dev:
+	@docker-compose exec web yarn encore dev
+
+composer-install:
+	@docker-compose exec web composer install || true
+
+install: composer-install yarn-install yarn-dev
 
 exec:
 	@docker-compose exec web bash

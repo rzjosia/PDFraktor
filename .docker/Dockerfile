@@ -58,4 +58,8 @@ EXPOSE 8000
 
 WORKDIR /var/www/project
 
-CMD mkdir -p /var/www/project/public/uploads/pdf; chmod 777 -R /var/www/project/public/uploads/pdf; apache2-foreground
+# Création d'un dossier pour déposer les split
+RUN mkdir -p /var/www/project/public/uploads/pdf
+RUN chmod 777 -R /var/www/project/public/uploads/pdf
+
+CMD apache2-foreground
