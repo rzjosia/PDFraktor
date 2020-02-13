@@ -4,10 +4,10 @@ namespace App\Controller;
 
 use App\Form\PdfUploadType;
 use App\Repository\PdfUrlRepository;
+use App\Service\PdfDelete;
 use App\Service\PdfRegister;
 use App\Service\PdfUploader;
 use App\Service\PdfUrlHasher;
-use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -131,11 +131,11 @@ class PdfDocumentController extends AbstractController
     /**
      * @Route("/{slug}", name="files.delete", methods={"DELETE"})
      * @param $slug
-     * @param EntityManagerInterface $entityManager
+     * @param PdfDelete $pdfDelete
      * @param Request $request
      * @return Response
      */
-    public function delete($slug, EntityManagerInterface $entityManager, Request $request): Response
+    public function delete($slug, PdfDelete $pdfDelete, Request $request): Response
     {
         $pdfUrl = $this->repository->findOneBy(["path" => $slug]);
         
@@ -150,8 +150,8 @@ class PdfDocumentController extends AbstractController
         try {
             if ($this->pdfUrlHasher->urlHashEquals($slug, $token) && $pdfUrl) {
                 
-                $entityManager->remove($pdfUrl);
-                $entityManager->flush();
+                $pdfDelete->delete($pdfUrl);
+                
                 $res["file"]["token_valid"] = "valid token";
                 $res["file"]["deleted"] = true;
             } else {

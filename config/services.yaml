@@ -52,3 +52,7 @@ services:
         arguments:
             $hashPrefix: '%hash_prefix%'
             $hashAlgo: '%hash_algo%'
+
+    App\Service\PdfDelete:
+        arguments:
+            $targetDirectory: '%pdf_directory%'
