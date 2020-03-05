@@ -17,8 +17,6 @@ services:
   database:
     image: mariadb
     restart: always
-    volumes:
-      - ".docker/database:/var/lib/mysql"
     environment:
       MYSQL_DATABASE: pdfraktor
       MYSQL_ROOT_PASSWORD: demo
