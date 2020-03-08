@@ -6,9 +6,11 @@
         "ext-ctype": "*",
         "ext-dom": "*",
         "ext-iconv": "*",
+        "ext-intl": "*",
         "ext-json": "*",
         "ext-simplexml": "*",
         "mikehaertl/php-pdftk": "^0.8.0",
+        "qipsius/tcpdf-bundle": "^2.0",
         "sensio/framework-extra-bundle": "^5.1",
         "smalot/pdfparser": "*",
         "symfony/apache-pack": "^1.0",
@@ -32,8 +34,7 @@
         "symfony/validator": "4.4.*",
         "symfony/web-link": "4.4.*",
         "symfony/webpack-encore-bundle": "^1.7",
-        "symfony/yaml": "4.4.*",
-      "ext-intl": "*"
+        "symfony/yaml": "4.4.*"
     },
     "require-dev": {
         "symfony/browser-kit": "4.4.*",

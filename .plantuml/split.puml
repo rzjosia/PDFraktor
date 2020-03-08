@@ -1,0 +1,29 @@
+@startuml
+actor client order 1
+participant PDFraktor order 2
+database BDD order 3
+
+client -> PDFraktor: déposer les fichiers un par un
+PDFraktor -> PDFraktor: vérification du fichier
+
+alt fichier invalide
+    PDFraktor -> client: Fichier Invalide
+else fichier valide
+    loop chaque page
+        PDFraktor -> PDFraktor: décoder Qr Code
+        alt Qr Code valide
+           PDFraktor -> PDFraktor: enregistrer morceaux PDF
+        end
+    end
+
+    alt morceaux de pdf généré
+        PDFraktor -> BDD: enregistrer les fichiers
+        PDFraktor <- BDD: données enregistrées
+        PDFraktor -> PDFraktor: génerer url unique
+        client <- PDFraktor: url unique
+    else aucun fichier généré
+        client <- PDFraktor: aucun fichier généré
+    end
+
+end
+@enduml

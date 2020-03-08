@@ -7,6 +7,7 @@ Pour cela il faut un motif pour séparer les pages. On utilise ici un QRcode ave
 ## Prérequis :
 - docker
 - docker-compose
+- make
 
 Installation:
 

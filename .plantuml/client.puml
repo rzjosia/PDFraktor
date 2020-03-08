@@ -1,0 +1,15 @@
+@startuml
+
+left to right direction
+skinparam packageStyle rectangle
+actor client #red
+rectangle PDFraktor {
+  client --  (consulter la page d'acceuil)
+  client -- (ajouter plusieurs fichiers )
+  client -- (supprimer un fichier)
+  client -- (uploader plusieurs fichier)
+  client -- (télécharger les fichiers découpés)
+  client -- (consulter la page mention légales)
+}
+
+@enduml

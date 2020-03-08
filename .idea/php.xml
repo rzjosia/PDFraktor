@@ -113,7 +113,15 @@
       <path value="$PROJECT_DIR$/vendor/symfony/debug-bundle" />
       <path value="$PROJECT_DIR$/vendor/psr/link" />
       <path value="$PROJECT_DIR$/vendor/easycorp/easy-log-handler" />
+      <path value="$PROJECT_DIR$/vendor/qipsius/tcpdf-bundle" />
     </include_path>
+  </component>
+  <component name="PhpInterpreters">
+    <interpreters>
+      <interpreter id="fdfcc954-7ab4-4f4d-9322-597b763b0a13" name="pdfraktor:latest" home="docker://DATA" debugger_id="php.debugger.XDebug">
+        <remote_data DOCKER_ACCOUNT_NAME="Docker" DOCKER_IMAGE_NAME="pdfraktor:latest" DOCKER_REMOTE_PROJECT_PATH="/opt/project" INTERPRETER_PATH="/usr/bin/php" HELPERS_PATH="/opt/.phpstorm_helpers" INITIALIZED="false" VALID="true" RUN_AS_ROOT_VIA_SUDO="false" />
+      </interpreter>
+    </interpreters>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.1" />
   <component name="PhpUnit">

@@ -162,4 +162,12 @@ class PdfHandler
     {
         return $this->separator;
     }
+    
+    /**
+     * @return string
+     */
+    public function getTargetDirectory(): string
+    {
+        return $this->targetDirectory;
+    }
 }

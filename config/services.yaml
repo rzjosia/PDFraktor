@@ -16,6 +16,14 @@ services:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
 
+    # the `qipsius.tcpdf` service will be injected when a
+    # `Qipsius\TCPDFBundle\Controller\TCPDFController` type-hint is detected
+    qipsius.tcpdf:
+        class: Qipsius\TCPDFBundle\Controller\TCPDFController
+        public: true
+        arguments:
+            $className: 'TCPDF'
+
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
     App\:

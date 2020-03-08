@@ -1,0 +1,20 @@
+@startuml
+
+
+PdfUrl "1" *-- "n" PdfDocument
+
+class PdfDocument {
+    -id
+    -path
+    -fileName
+    -PdfUrl
+}
+
+class PdfUrl {
+    -id
+    -path
+    -createdAt
+    -PdfDocuments
+}
+
+@enduml
