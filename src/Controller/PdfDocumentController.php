@@ -33,11 +33,6 @@ class PdfDocumentController extends AbstractController
      */
     
     private $router;
-    /**
-     * @var LoggerInterface
-     */
-    
-    private $logger;
     
     /**
      * @var PdfUrlHasher
@@ -58,7 +53,6 @@ class PdfDocumentController extends AbstractController
     {
         $this->repository = $repository;
         $this->router = $router;
-        $this->logger = $logger;
         $this->pdfUrlHasher = $pdfUrlHasher;
     }
     
