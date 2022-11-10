@@ -12,17 +12,17 @@ class QrCodeDecoder
      * @var string
      */
     private $qrserver;
-    
+
     /**
      * @var string|null
      */
     private $xmlContent;
-    
+
     /**
      * @var LoggerInterface
      */
     private $logger;
-    
+
     /**
      * QrCodeDecoder constructor.
      * @param $qrserver
@@ -34,24 +34,29 @@ class QrCodeDecoder
         $this->xmlContent = null;
         $this->logger = $logger;
     }
-    
+
     /**
      * @param string $path
      * @return $this
      */
-    public function decode(string $path)
+    public function decode(string $path): QrCodeDecoder
     {
         $process = new Process(['/usr/bin/zbarimg', '-q', '--xml', $path]);
-        
+
         $process->start();
         $process->wait();
-        
+
+        if (!$process->isSuccessful()) {
+            $this->logger->error($process->getErrorOutput());
+            return $this;
+        }
+
         $this->xmlContent = $process->getOutput();
-        
+
         return $this;
-        
+
     }
-    
+
     /**
      * @param string $separator
      * @return array
@@ -62,13 +67,12 @@ class QrCodeDecoder
             $this->logger->info("no xml content");
             return [];
         }
-        
+
         $crawler = new Crawler();
         $crawler->addXmlContent($this->xmlContent);
-        
+
         $this->logger->info("xml content filter begin");
-        
-        
+
         $output = $crawler->filterXPath('//source/index')->each(function (Crawler $indexCrawler, $i) use ($separator) {
             $res = $indexCrawler->filterXPath('node()//symbol')->each(function (Crawler $symbolCrawler, $i) use ($separator, $indexCrawler) {
                 $text = $symbolCrawler->filterXPath('node()//data')->text("none");
@@ -81,15 +85,15 @@ class QrCodeDecoder
                 }
                 return null;
             });
-            
+
             return array_merge(array_filter($res))[0] ?? null;
         });
-        
-        $this->logger->info("xml content filter end");
-        
+
+        $this->logger->info("xml content filter end : " . count($output));
+
         return array_filter($output);
     }
-    
+
     /**
      * @return string
      */
@@ -97,5 +101,5 @@ class QrCodeDecoder
     {
         return $this->xmlContent;
     }
-    
+
 }

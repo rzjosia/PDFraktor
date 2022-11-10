@@ -56,6 +56,12 @@ class PdfHandler
         $generatedFiles = [];
         try {
             $numberOfPages = $this->getNumberOfPages($file->getRealPath());
+
+            if ($numberOfPages === 0) {
+                throw new Exception('File is empty');
+            }
+
+            $this->logger->info('File parsed : ' . $file->getRealPath());
             
             $intercalaries = $this->qrReader
                 ->decode($file->getRealPath())
@@ -78,7 +84,7 @@ class PdfHandler
             }
             
         } catch (Exception $ignore) {
-        
+            $this->logger->error($ignore->getMessage());
         }
         
         return $generatedFiles;
@@ -91,7 +97,7 @@ class PdfHandler
      * @param $pageEnd
      * @return string|null
      */
-    private function create($filePath, $pageBegin, $pageEnd = null): ?string
+    private function create(string $filePath, $pageBegin, $pageEnd = null): ?string
     {
         $this->logger->info("create file begin");
         
@@ -143,7 +149,7 @@ class PdfHandler
      * @return string
      */
     private
-    function generateFileNameWithoutExtension($fileName)
+    function generateFileNameWithoutExtension($fileName): string
     {
         $originalFilename = pathinfo($fileName, PATHINFO_FILENAME);
         

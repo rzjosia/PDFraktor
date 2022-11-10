@@ -65,7 +65,7 @@ $(document).ready(function () {
 			const fData = fileList[fileList.length - 1];
 
 			// Afficher le progrès du découopage
-			$("#pdfList").append(model(fData.file.name, fData.id, "en attente de chargement"))
+			$("#pdfList").append(model(fData.file.name, fData.id, "En attente de chargement"))
 				.hide()
 				.fadeIn(i * 300);
 		});

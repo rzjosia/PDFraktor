@@ -11,10 +11,6 @@ use Exception;
 
 class PdfRegister
 {
-    /**
-     * @var $string
-     */
-    private $targetDirectory;
     
     /**
      * @var EntityManagerInterface
@@ -28,7 +24,6 @@ class PdfRegister
      */
     public function __construct($targetDirectory, EntityManagerInterface $entityManager)
     {
-        $this->targetDirectory = $targetDirectory;
         $this->entityManager = $entityManager;
     }
     

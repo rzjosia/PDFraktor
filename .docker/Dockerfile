@@ -1,4 +1,4 @@
-FROM php:apache
+FROM php:7.4-apache
 
 # Quelques library necessaires
 RUN mkdir -p /usr/share/man/man1mkdir -p /usr/share/man/man1
@@ -37,12 +37,8 @@ RUN curl -sSk https://getcomposer.org/installer | php -- --disable-tls && \
     mv composer.phar /usr/local/bin/composer
 
 # Installer symfony CLI
-RUN wget https://get.symfony.com/cli/installer -O - | bash
-RUN export PATH="$HOME/.symfony/bin:$PATH"
-RUN mv /root/.symfony/bin/symfony /usr/local/bin/symfony
-
-# Dossier du site
-RUN mkdir /var/www/project
+RUN curl -1sLf 'https://dl.cloudsmith.io/public/symfony/stable/setup.deb.sh' | bash
+RUN apt install symfony-cli
 
 # Activer de dbus
 RUN dbus-uuidgen > /var/lib/dbus/machine-id
@@ -56,10 +52,11 @@ RUN service apache2 restart
 EXPOSE 80
 EXPOSE 8000
 
+# Dossier du site
+RUN mkdir /var/www/project
+
 WORKDIR /var/www/project
 
-# Création d'un dossier pour déposer les split
-RUN mkdir -p /var/www/project/public/uploads/pdf
-RUN chmod 777 -R /var/www/project/public/uploads/pdf
+RUN sed -i '/disable ghostscript format types/,+6d' /etc/ImageMagick-6/policy.xml
 
 CMD apache2-foreground

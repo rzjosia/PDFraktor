@@ -21,3 +21,5 @@ public/uploads/pdf/*
 npm-debug.log
 yarn-error.log
 ###< symfony/webpack-encore-bundle ###
+
+/public/uploads/pdf/*

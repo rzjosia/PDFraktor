@@ -33,9 +33,9 @@ const uploadFile = (fData) => {
 			setProgress(percent);
 
 			if (percent === 100) {
-				setStatusMessage("info", "split en cours");
+				setStatusMessage("info", "Découpage en cours");
 			} else {
-				setStatusMessage("info", "upload en cours");
+				setStatusMessage("info", "Chargement du fichier vers le serveur en cours");
 			}
 		},
 	})

@@ -14,27 +14,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class HomeController extends AbstractController
 {
     /**
-     * @var EntityManager
-     */
-    private $entityManager;
-    
-    /**
-     * @var UrlGeneratorInterface
-     */
-    private $router;
-    
-    /**
-     * HomeController constructor.
-     * @param EntityManagerInterface $entityManager
-     * @param UrlGeneratorInterface $router
-     */
-    public function __construct(EntityManagerInterface $entityManager, UrlGeneratorInterface $router)
-    {
-        $this->entityManager = $entityManager;
-        $this->router = $router;
-    }
-    
-    /**
      * @Route("/", name="home")
      * @param PdfHandler $pdfHandler
      * @return Response
