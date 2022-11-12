@@ -23,6 +23,7 @@ help:
 	@echo   logs        Show the logs of the app container
 	@echo   watch       Watch the source files and rebuild on change
 	@echo   sql         Open a MySQL shell
+	@echo   test        Run the tests
 
 .PHONY:
 all: build start
@@ -113,3 +114,9 @@ sql:
 .PHONY:
 logs:
 	@$(exec) web symfony server:log
+
+.PHONY:
+test:
+	@$(exec) web symfony console --env=test doctrine:database:create --if-not-exists
+	@$(exec) web symfony console --env=test doctrine:migrations:migrate -n --allow-no-migration
+	@$(exec) web ./vendor/bin/phpunit
