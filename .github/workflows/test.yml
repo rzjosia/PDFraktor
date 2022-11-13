@@ -1,0 +1,31 @@
+on: [ push ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    name: Tests
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - uses: n1hility/cancel-previous-runs@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Pull docker images
+        run: docker-compose pull
+
+      - uses: satackey/action-docker-layer-caching@v0.0.11
+        continue-on-error: true
+
+      - name: Build image
+        run: make build-up
+
+      - name: Install dependencies and init database
+        run: make prepare-for-test
+
+      - name: Tests
+        run: make test-all
+
+      - name: Stop containers
+        run: make build-down

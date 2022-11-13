@@ -49,6 +49,8 @@ RUN dbus-uuidgen > /var/lib/dbus/machine-id
 RUN mkdir -p /var/run/dbus
 RUN dbus-daemon --config-file=/usr/share/dbus-1/system.conf --print-address
 
+RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
+
 # Activer rewrite mode htaccess
 RUN a2enmod rewrite
 RUN service apache2 restart
