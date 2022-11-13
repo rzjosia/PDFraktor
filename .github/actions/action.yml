@@ -1,6 +1,0 @@
-name: 'PHP Apache'
-description: 'PHP Apache image for pdfRaktor'
-runs:
-  using: 'docker'
-  image: '../../.docker/Dockerfile'
-

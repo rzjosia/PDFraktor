@@ -2,16 +2,13 @@ version: "3.5"
 
 services:
   web:
-    image: pdfraktor
-    build:
-      context: .
-      dockerfile: ./.docker/Dockerfile
+    image: "ghcr.io/rzjosia/pdfraktor-registry:latest"
     volumes:
       - ".:/var/www/project"
       - ".docker/vhosts:/etc/apache2/sites-enabled"
     ports:
-      - 7777:80
-      - 8888:8000
+      - "7777:80"
+      - "8888:8000"
     depends_on:
       - database
   database:
