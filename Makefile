@@ -11,10 +11,10 @@ endif
 .PHONY:
 help:
 	@echo Usage: make [target]
-	@echo
 	@echo Targets:
 	@echo   help        Show this help
 	@echo   build       Build the project
+	@echo   rebuild     CLean container and rebuild docker images
 	@echo   start       Start the project
 	@echo   stop        Stop the project
 	@echo   restart     Restart the project
@@ -22,7 +22,8 @@ help:
 	@echo   exec        Open a shell in the app container
 	@echo   logs        Show the logs of the app container
 	@echo   watch       Watch the source files and rebuild on change
-	@echo   sql         Open a MySQL shell
+	@echo   mysql       Open a MySQL shell
+	@echo   test-mysql  Open a MySQL shell for testing environment
 	@echo   test        Run the tests
 
 .PHONY:
@@ -34,9 +35,6 @@ build :
 
 .PHONY:
 rebuild: clean build
-
-.PHONY:
-rerun: stop rebuild start
 
 .PHONY:
 start-container:
@@ -75,14 +73,6 @@ watch: yarn-install
 	@$(exec) web yarn encore dev --watch
 
 .PHONY:
-sf-serve:
-	@$(exec) web symfony serve
-
-.PHONY:
-yarn-watch:
-	@$(exec) web yarn encore dev --watch
-
-.PHONY:
 yarn-install:
 	@$(exec) web yarn
 
@@ -108,8 +98,12 @@ exec:
 	@$(exec) -t -i web bash
 
 .PHONY:
-sql:
-	@$(exec) -t -i database bash
+mysql:
+	@$(exec) -t -i database mysql -u root -pdemo pdfraktor
+
+.PHONY:
+test-mysql:
+	@$(exec) -t -i database mysql -u root -pdemo pdfraktor_test
 
 .PHONY:
 logs:
@@ -117,6 +111,8 @@ logs:
 
 .PHONY:
 test:
+	@$(exec) web rm -rf var/cache/test/*
+	@$(exec) web symfony console --env=test doctrine:database:drop --force
 	@$(exec) web symfony console --env=test doctrine:database:create --if-not-exists
 	@$(exec) web symfony console --env=test doctrine:migrations:migrate -n --allow-no-migration
 	@$(exec) web ./vendor/bin/phpunit

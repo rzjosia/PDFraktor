@@ -15,7 +15,10 @@ RUN apt -y install --no-install-recommends \
     libicu-dev \
     ghostscript \
     gnupg2 \
-    pdftk
+    pdftk \
+    zlib1g-dev \
+    libzip-dev \
+    unzip
 
 # yarn configuration
 RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
@@ -28,9 +31,10 @@ RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
     locale-gen
 
 # Installer les extensions PHP
-RUN docker-php-ext-install pdo_mysql \
-    && docker-php-ext-configure intl \
-    && docker-php-ext-install intl
+RUN docker-php-ext-install pdo_mysql
+RUN docker-php-ext-configure intl
+RUN docker-php-ext-install intl
+RUN docker-php-ext-install zip
 
 # Installer composer
 RUN curl -sSk https://getcomposer.org/installer | php -- --disable-tls && \
