@@ -12,16 +12,6 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Pull docker images
-        run: docker-compose pull
-
-      - uses: satackey/action-docker-layer-caching@v0.0.11
-        continue-on-error: true
-        with:
-          key: pdfraktor-docker-cache-{hash}
-          restore-keys: |
-            pdfraktor-docker-cache-
-
       - name: Build image
         run: make build-up
 
