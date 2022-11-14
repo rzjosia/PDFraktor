@@ -43,6 +43,7 @@ services:
     App\Service\QrCodeDecoder:
         arguments:
             $qrserver: '%qrserver%'
+        public: true
 
     App\Service\PdfRegister:
         arguments:

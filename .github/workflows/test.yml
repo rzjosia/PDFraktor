@@ -1,0 +1,26 @@
+name: Test
+on: [ push ]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    name: Tests
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - uses: n1hility/cancel-previous-runs@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build image
+        run: make build-up
+
+      - name: Install dependencies and init database
+        run: make prepare-for-test
+
+      - name: Tests
+        run: make test-all
+
+      - name: Stop containers
+        if: always()
+        run: make build-down

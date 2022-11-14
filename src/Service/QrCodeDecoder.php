@@ -74,24 +74,28 @@ class QrCodeDecoder
         $this->logger->info("xml content filter begin");
 
         $output = $crawler->filterXPath('//source/index')->each(function (Crawler $indexCrawler, $i) use ($separator) {
-            $res = $indexCrawler->filterXPath('node()//symbol')->each(function (Crawler $symbolCrawler, $i) use ($separator, $indexCrawler) {
+            $res = $indexCrawler->filterXPath('node()//symbol')->each(function (Crawler $symbolCrawler, $i)use ($separator, $indexCrawler) {
                 $text = $symbolCrawler->filterXPath('node()//data')->text("none");
-                if ($text == $separator) {
-                    return [
-                        "index" => (int)$indexCrawler->filterXPath('node()')->extract(['num'])[0],
-                        "page" => (int)$indexCrawler->filterXPath('node()')->extract(['num'])[0] + 1,
-                        "text" => $text
-                    ];
+
+                if ($text != $separator) {
+                    return null;
                 }
-                return null;
+
+                $index = (int)$indexCrawler->filterXPath('node()')->extract(['num'])[0];
+
+                return [
+                    "index" => $index,
+                    "page" => $index + 1,
+                    "text" => $text
+                ];
             });
 
-            return array_merge(array_filter($res))[0] ?? null;
+            return $res[0] ?? null;
         });
 
         $this->logger->info("xml content filter end : " . count($output));
 
-        return array_filter($output);
+        return $output;
     }
 
     /**
