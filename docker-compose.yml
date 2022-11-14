@@ -2,7 +2,7 @@ version: "3.5"
 
 services:
   web:
-    image: rzjosia/pdfraktor-registry:latest
+    image: rzjosia/pdfraktor-registry:master
     volumes:
       - ".:/var/www/project"
       - ".docker/vhosts:/etc/apache2/sites-enabled"
