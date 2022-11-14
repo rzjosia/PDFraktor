@@ -20,3 +20,7 @@ jobs:
 
       - name: Tests
         run: make test-all
+
+      - name: Stop containers
+        if: always()
+        run: make build-down
