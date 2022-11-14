@@ -151,3 +151,15 @@ exit-test:
 	@$(exec) web composer install
 	@$(exec) web yarn install
 	@$(exec) web yarn encore dev
+
+.PHONY:
+composer-cache-dir:
+	@$(exec) -T web composer config cache-files-dir
+
+.PHONY:
+yarn-cache-dir:
+	@$(exec) -T web yarn cache dir
+
+.PHONY:
+composer-validate:
+	@$(exec) -T web composer validate --strict
