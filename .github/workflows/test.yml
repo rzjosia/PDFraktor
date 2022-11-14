@@ -4,12 +4,6 @@ jobs:
   test:
     runs-on: ubuntu-latest
     name: Tests
-    strategy:
-      matrix:
-        php-version:
-          - "7.4"
-        dependencies:
-          - "locked"
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -30,35 +24,6 @@ jobs:
 
       - name: Build image
         run: make build-up
-
-      - name: Validate composer.json and composer.lock
-        run: make composer-validate
-
-      - name: Get composer cache directory
-        id: composer-cache-directory
-        run: |
-          echo "::set-output name=dir::$(make composer-cache-dir)"
-
-      - name: Cache dependencies installed with composer
-        uses: actions/cache@v3
-        with:
-          path: ${{ steps.composer-cache-directory.outputs.dir }}
-          key: php-${{ matrix.php-version }}-composer-${{ matrix.dependencies }}-${{ hashFiles('composer.lock') }}
-          restore-keys:
-            php-${{ matrix.php-version }}-composer-${{ matrix.dependencies }}-
-
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir-path
-        run: echo "::set-output name=dir::$(yarn cache dir)"
-
-      - name: Yarn cache
-        uses: actions/cache@v3
-        id: yarn-cache
-        with:
-          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
 
       - name: Install dependencies and init database
         run: make prepare-for-test
