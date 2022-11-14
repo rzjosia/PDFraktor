@@ -2,10 +2,7 @@ name: Test
 on: [ push ]
 jobs:
   test:
-    strategy:
-      matrix:
-        os: [ ubuntu-latest, windows-latest ]
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     name: Tests
     steps:
       - name: Checkout
@@ -20,6 +17,10 @@ jobs:
 
       - uses: satackey/action-docker-layer-caching@v0.0.11
         continue-on-error: true
+        with:
+          key: pdfraktor-docker-cache-{hash}
+          restore-keys: |
+            pdfraktor-docker-cache-
 
       - name: Build image
         run: make build-up
