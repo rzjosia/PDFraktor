@@ -10,38 +10,18 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class PdfDelete
 {
-    /**
-     * @var string
-     */
-    private $targetDirectory;
-    
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
-    
-    /**
-     * PdfDelete constructor.
-     * @param $targetDirectory
-     * @param EntityManagerInterface $entityManager
-     */
-    public function __construct($targetDirectory, EntityManagerInterface $entityManager)
+    public function __construct(private readonly string $targetDirectory, private readonly EntityManagerInterface $entityManager)
     {
-        $this->targetDirectory = $targetDirectory;
-        $this->entityManager = $entityManager;
     }
-    
-    /**
-     * @param PdfUrl $pdfUrl
-     */
-    public function delete(PdfUrl $pdfUrl)
+
+    public function delete(PdfUrl $pdfUrl): void
     {
         $filesystem = new Filesystem();
-        
+
         foreach ($pdfUrl->getPdfDocuments() as $pdfDocument) {
             $filesystem->remove($this->targetDirectory . "/" . $pdfDocument->getFileName());
         }
-        
+
         $this->entityManager->remove($pdfUrl);
         $this->entityManager->flush();
     }

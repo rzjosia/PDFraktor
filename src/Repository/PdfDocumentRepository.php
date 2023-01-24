@@ -14,9 +14,9 @@ use Doctrine\Common\Persistence\ManagerRegistry;
  */
 class PdfDocumentRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $managerRegistry)
     {
-        parent::__construct($registry, PdfDocument::class);
+        parent::__construct($managerRegistry, PdfDocument::class);
     }
     
     // /**

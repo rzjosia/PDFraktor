@@ -4,20 +4,13 @@ namespace App\Controller;
 
 use App\Form\PdfUploadType;
 use App\Service\PdfHandler;
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class HomeController extends AbstractController
 {
-    /**
-     * @Route("/", name="home")
-     * @param PdfHandler $pdfHandler
-     * @return Response
-     */
+    #[Route('/', name: 'home')]
     public function index(PdfHandler $pdfHandler): Response
     {
         $form = $this->createForm(PdfUploadType::class);
@@ -27,11 +20,8 @@ class HomeController extends AbstractController
             "separator" => $pdfHandler->getSeparator()
         ]);
     }
-    
-    /**
-     * @Route("/mentions-legales", name="mentions.legales")
-     * @return Response
-     */
+
+    #[Route('/mentions-legales', name: 'mentions.legales')]
     public function legal(): Response
     {
         return $this->render('mention.legal.html.twig', [

@@ -33,7 +33,6 @@ services:
     App\Service\PdfHandler:
         arguments:
             $targetDirectory: '%pdf_directory%'
-            $qrReader: '@App\Service\QrCodeDecoder'
             $separator: '%separator%'
 
     App\Service\PdfUploader:

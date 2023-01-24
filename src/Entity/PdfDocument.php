@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -15,23 +16,23 @@ class PdfDocument
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private ?int $id = null;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\Unique
      */
-    private $fileName;
+    private ?string $fileName = null;
 
     /**
      * @ORM\Column(type="datetime")
      */
-    private $createdAt;
+    private ?DateTimeInterface $createdAt = null;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\PdfUrl", inversedBy="PdfDocuments", cascade={"persist"})
      */
-    private $pdfUrl;
+    private ?PdfUrl $pdfUrl = null;
 
     public function getId(): ?int
     {
@@ -50,12 +51,12 @@ class PdfDocument
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeInterface
+    public function getCreatedAt(): ?DateTimeInterface
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    public function setCreatedAt(DateTimeInterface $createdAt): self
     {
         $this->createdAt = $createdAt;
 

@@ -33,7 +33,7 @@ help:
 
 .PHONY:
 build :
-	@$(compose) build
+	@$(compose) build --pull
 
 .PHONY:
 build-up :
@@ -95,6 +95,7 @@ yarn-dev:
 
 .PHONY:
 composer-install:
+	@$(exec) web rm -rf var/cache/dev/*
 	@$(exec) web composer install
 	@$(True)
 

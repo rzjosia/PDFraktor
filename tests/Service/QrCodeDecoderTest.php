@@ -7,7 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class QrCodeDecoderTest extends KernelTestCase
 {
-    public function testDecodeWithIntercalaries()
+    public function testDecodeWithIntercalaries(): void
     {
         $kernel = self::bootKernel();
         $container = $kernel->getContainer();
@@ -35,7 +35,7 @@ class QrCodeDecoderTest extends KernelTestCase
         $this->assertTrue($this->identicalArray($expected, $intercalaries));
     }
 
-    public function testDecodeWithoutIntercalaries()
+    public function testDecodeWithoutIntercalaries(): void
     {
         $kernel = self::bootKernel();
         $container = $kernel->getContainer();
@@ -50,9 +50,9 @@ class QrCodeDecoderTest extends KernelTestCase
         $this->assertEmpty($intercalaries);
     }
 
-    private function identicalArray($a, $b): bool
+    private function identicalArray(array $a, $b): bool
     {
-        if (count($a) != count($b)) {
+        if (count($a) !== count($b)) {
             return false;
         }
 

@@ -4,8 +4,8 @@ namespace App\Repository;
 
 use App\Entity\PdfUrl;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\Query;
+use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @method PdfUrl|null find($id, $lockMode = null, $lockVersion = null)
@@ -15,14 +15,13 @@ use Doctrine\ORM\Query;
  */
 class PdfUrlRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $managerRegistry)
     {
-        parent::__construct($registry, PdfUrl::class);
+        parent::__construct($managerRegistry, PdfUrl::class);
     }
     
     /**
      * @param $name
-     * @return Query
      */
     public function findByPathQuery($name) : Query
     {
