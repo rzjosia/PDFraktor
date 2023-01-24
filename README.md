@@ -4,7 +4,7 @@ PDFraktor est une application web en symfony qui permet de découper un fichier 
 
 ![homepage screenshot](readme_data/homepage.png)
 
-Les pages seront scindée en plusieurs parties dont le QR Code avec la valeurs **_"intercalary"_** dans le fichier
+Les pages seront scindée en plusieurs parties dont le QR Code avec la valeur **_"intercalary"_** dans le fichier
 servira d'intercalaire.
 
 ![homepage screenshot](readme_data/file_list_page.png)
