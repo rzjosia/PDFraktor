@@ -8,10 +8,10 @@ class HomeControllerTest extends WebTestCase
 {
     public function testHome(): void
     {
-        $kernelBrowser = static::createClient();
+        $client = static::createClient();
+        $crawler = $client->request('GET', '/');
 
-        $kernelBrowser->request('GET', '/');
-
-        $this->assertTrue($kernelBrowser->getResponse()->isSuccessful());
+        $this->assertResponseIsSuccessful();
+        $this->assertSelectorTextContains('p', "Extraire plusieurs pages à partir d'un PDF");
     }
 }

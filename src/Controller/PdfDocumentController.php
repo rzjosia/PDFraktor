@@ -28,19 +28,13 @@ class PdfDocumentController extends AbstractController
     {
     }
 
-    /**
-     * @Route("/no_content", name="files.none", methods={"GET"})
-     */
+    #[Route('/no_content', name: 'files.none', methods: ['GET'])]
     public function noContent(): Response
     {
         return $this->render("files/index.html.twig");
     }
 
-    /**
-     * @Route("/{slug}", name="files.show", methods={"GET"})
-     * @param $slug
-     * @return Response
-     */
+    #[Route('/{slug}', name: 'files.show', methods: ['GET'])]
     public function show($slug): Response
     {
         $pdfUrl = $this->pdfUrlRepository->findOneBy(["path" => $slug]);
@@ -54,9 +48,9 @@ class PdfDocumentController extends AbstractController
     }
 
     /**
-     * @Route("/", name = "files.create", methods={"POST"})
      * @throws Exception
      */
+    #[Route('/', name: 'files.create', methods: ['POST'])]
     public function create(PdfUploader $pdfUploader,
                            PdfRegister $pdfRegister,
                            Request     $request): Response
@@ -92,9 +86,9 @@ class PdfDocumentController extends AbstractController
     }
 
     /**
-     * @Route("/{slug}", name="files.delete", methods={"DELETE"})
      * @throws JsonException
      */
+    #[Route('/{slug}', name: 'files.delete', methods: ['DELETE'])]
     public function delete(string $slug, PdfDelete $pdfDelete, Request $request): Response
     {
         $pdfUrl = $this->pdfUrlRepository->findOneBy(["path" => $slug]);

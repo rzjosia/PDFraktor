@@ -10,9 +10,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class HomeController extends AbstractController
 {
-    /**
-     * @Route("/", name="home")
-     */
+    #[Route('/', name: 'home')]
     public function index(PdfHandler $pdfHandler): Response
     {
         $form = $this->createForm(PdfUploadType::class);
@@ -23,9 +21,7 @@ class HomeController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/mentions-legales", name="mentions.legales")
-     */
+    #[Route('/mentions-legales', name: 'mentions.legales')]
     public function legal(): Response
     {
         return $this->render('mention.legal.html.twig', [
