@@ -6,12 +6,12 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class HomeControllerTest extends WebTestCase
 {
-    public function testHome()
+    public function testHome(): void
     {
-        $client = static::createClient();
-        
-        $client->request('GET', '/');
-        
-        $this->assertTrue($client->getResponse()->isSuccessful());
+        $kernelBrowser = static::createClient();
+
+        $kernelBrowser->request('GET', '/');
+
+        $this->assertTrue($kernelBrowser->getResponse()->isSuccessful());
     }
 }

@@ -18,28 +18,28 @@ class PdfUrl
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private ?int $id = null;
     
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\Unique
      */
-    private $path;
+    private ?string $path = null;
     
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\PdfDocument", mappedBy="pdfUrl", cascade={"persist", "remove"})
      */
-    private $PdfDocuments;
+    private Collection $PdfDocuments;
     
     /**
      * @ORM\Column(type="datetime")
      */
-    private $createdAt;
+    private ?DateTimeInterface $createdAt = null;
     
     /**
      * @ORM\Column(type="datetime", nullable=true)
      */
-    private $expireAt;
+    private ?DateTimeInterface $expireAt = null;
     
     public function __construct()
     {

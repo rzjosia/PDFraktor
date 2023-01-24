@@ -11,13 +11,13 @@ use Symfony\Component\Validator\Constraints\File;
 
 class PdfUploadType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $formBuilder, array $options): void
     {
-        $builder
+        $formBuilder
             ->add('document', FileType::class, [
-                
+
                 'label' => "Selectionner votre PDF",
-                
+
                 'attr' => [
                     'placeholder' => "cliquer ou glisser ici",
                     'class' => "form-control",
@@ -48,10 +48,10 @@ class PdfUploadType extends AbstractType
                 ],
             ]);
     }
-    
-    public function configureOptions(OptionsResolver $resolver)
+
+    public function configureOptions(OptionsResolver $optionsResolver): void
     {
-        $resolver->setDefaults([
+        $optionsResolver->setDefaults([
             'data_class' => null,
             'csrf_protection' => true,
             'csrf_token_id' => 'pdf_upload'

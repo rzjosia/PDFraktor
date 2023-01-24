@@ -8,37 +8,12 @@ use Symfony\Component\Process\Process;
 
 class QrCodeDecoder
 {
-    /**
-     * @var string
-     */
-    private $qrserver;
+    private ?string $xmlContent = null;
 
-    /**
-     * @var string|null
-     */
-    private $xmlContent;
-
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    /**
-     * QrCodeDecoder constructor.
-     * @param $qrserver
-     * @param LoggerInterface $logger
-     */
-    public function __construct($qrserver, LoggerInterface $logger)
+    public function __construct($qrserver, private readonly LoggerInterface $logger)
     {
-        $this->qrserver = $qrserver;
-        $this->xmlContent = null;
-        $this->logger = $logger;
     }
 
-    /**
-     * @param string $path
-     * @return $this
-     */
     public function decode(string $path): QrCodeDecoder
     {
         $process = new Process(['/usr/bin/zbarimg', '-q', '--xml', $path]);
@@ -57,10 +32,6 @@ class QrCodeDecoder
 
     }
 
-    /**
-     * @param string $separator
-     * @return array
-     */
     public function getIntercalaries(string $separator): array
     {
         if ($this->xmlContent == null) {
@@ -73,23 +44,19 @@ class QrCodeDecoder
 
         $this->logger->info("xml content filter begin");
 
-        $output = $crawler->filterXPath('//source/index')->each(function (Crawler $indexCrawler, $i) use ($separator) {
-            $res = $indexCrawler->filterXPath('node()//symbol')->each(function (Crawler $symbolCrawler, $i)use ($separator, $indexCrawler) {
+        $output = $crawler->filterXPath('//source/index')->each(static function (Crawler $indexCrawler, $i) use ($separator) {
+            $res = $indexCrawler->filterXPath('node()//symbol')->each(static function (Crawler $symbolCrawler, $i) use ($separator, $indexCrawler): ?array {
                 $text = $symbolCrawler->filterXPath('node()//data')->text("none");
-
-                if ($text != $separator) {
+                if ($text !== $separator) {
                     return null;
                 }
-
                 $index = (int)$indexCrawler->filterXPath('node()')->extract(['num'])[0];
-
                 return [
                     "index" => $index,
                     "page" => $index + 1,
                     "text" => $text
                 ];
             });
-
             return $res[0] ?? null;
         });
 
@@ -97,13 +64,4 @@ class QrCodeDecoder
 
         return $output;
     }
-
-    /**
-     * @return string
-     */
-    public function getXmlContent(): string
-    {
-        return $this->xmlContent;
-    }
-
 }

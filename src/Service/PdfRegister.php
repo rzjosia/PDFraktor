@@ -6,52 +6,39 @@ namespace App\Service;
 
 use App\Entity\PdfDocument;
 use App\Entity\PdfUrl;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 
 class PdfRegister
 {
-    
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
-    
-    /**
-     * PdfRegister constructor.
-     * @param $targetDirectory
-     * @param EntityManagerInterface $entityManager
-     */
-    public function __construct($targetDirectory, EntityManagerInterface $entityManager)
+    public function __construct($targetDirectory, private readonly EntityManagerInterface $entityManager)
     {
-        $this->entityManager = $entityManager;
     }
-    
+
     /**
-     * @param array $generatedFiles
-     * @return PdfUrl
      * @throws Exception
      */
     public function register(array $generatedFiles): PdfUrl
     {
         $pdfUrl = new PdfUrl();
-        
+
         $pdfUrl
             ->setPath(uniqid("pdfraktor_"))
-            ->setCreatedAt(new \DateTime());
-        
-        foreach ($generatedFiles as $file) {
+            ->setCreatedAt(new DateTime());
+
+        foreach ($generatedFiles as $generatedFile) {
             $pdfDocument = new PdfDocument();
-            
+
             $pdfDocument
-                ->setFileName($file)
-                ->setCreatedAt(new \DateTime());
-            
+                ->setFileName($generatedFile)
+                ->setCreatedAt(new DateTime());
+
             $pdfUrl->addPdfDocument($pdfDocument);
-            
+
             $this->entityManager->persist($pdfDocument);
         }
-        
+
         $this->entityManager->flush();
         return $pdfUrl;
     }
