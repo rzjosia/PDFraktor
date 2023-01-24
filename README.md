@@ -1,19 +1,34 @@
 # PDFraktor
 
-PDFraktor est une application web en symfony 4 qui permet de découper un fichier pdf en plusieurs fichiers.
+PDFraktor est une application web en symfony qui permet de découper un fichier pdf en plusieurs fichiers.
 
-Pour cela il faut un motif pour séparer les pages. On utilise ici un QRcode avec les mot clé **_"intercalary"_**
+![homepage screenshot](readme_data/homepage.png)
+
+Les pages seront scindée en plusieurs parties dont le QR Code avec la valeurs **_"intercalary"_** dans le fichier
+servira d'intercalaire.
+
+![homepage screenshot](readme_data/file_list_page.png)
 
 ## Prérequis :
+
+- make
 - docker
 - docker-compose
+
+Aide pour les commande make :
+
+```shell script
+make help
+```
 
 Installation:
 
 ```shell script
 make build
 ```
+
 ou
+
 ```shell script
 sudo make build
 ```
